@@ -58,10 +58,18 @@ namespace :rubber do
 
     def load_rubber_secret_filename
       begin
+        ENV['RAILS_ENV'] ||= rubber_env
+
         require 'rubber'
         require 'rails'
 
         root = Rails.root
+
+        # This sucks
+        Object.send :remove_const, :RUBBER_ROOT
+        Object.send :remove_const, :RUBBER_ENV
+        Object.send :remove_const, :RUBBER_CONFIG
+        Object.send :remove_const, :RUBBER_INSTANCES
 
         Rubber::initialize(root, rubber_env)
 
@@ -78,6 +86,8 @@ namespace :rubber do
 
     def app_name
       begin
+        ENV['RAILS_ENV'] ||= rubber_env
+
         require 'rubber'
         require 'rails'
 
