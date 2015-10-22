@@ -1,0 +1,2 @@
+require 'rubber/secret/lastpass'
+
