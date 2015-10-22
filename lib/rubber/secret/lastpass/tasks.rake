@@ -103,7 +103,7 @@ namespace :rubber do
     end
 
     def rubber_env
-      Rubber.env || get_env('RUBBER_ENV')
+      get_env('RUBBER_ENV')
     end
     
     def get_env(var, prompt=nil, required=true)
