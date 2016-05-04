@@ -8,20 +8,23 @@ namespace :rubber do
   namespace :credentials do
     include Rubber::Secret::Lastpass::Cli
 
+    desc "Fetches rubber-secret.yml from LastPass to your rubber secret directory"
     task :fetch do
       contents = YAML.load(show(note_name, "notes"))
 
       save_rubber_secret contents
     end
 
+    desc "Uploads rubber-secret.yml to LastPass from your rubber secret directory"
     task :put do
       edit_from_file note_name, "notes", load_rubber_secret_filename
 
       puts "Updated Lastpass note #{note_name}"
     end
 
+    desc "Set a new key/value pair in rubber-secret.yml"
     task :set do
-      Rake::Task['rubber:credentials:fetch'].reenable      
+      Rake::Task['rubber:credentials:fetch'].reenable
       Rake::Task['rubber:credentials:fetch'].invoke
       Rake::Task['rubber:credentials:fetch'].reenable
 
@@ -36,14 +39,14 @@ namespace :rubber do
 
       Rake::Task['rubber:credentials:put'].reenable
       Rake::Task['rubber:credentials:put'].invoke
-      Rake::Task['rubber:credentials:put'].reenable      
+      Rake::Task['rubber:credentials:put'].reenable
     end
 
     def load_rubber_secret
       rubber_secret_file = load_rubber_secret_filename
 
       puts "Loading #{rubber_secret_file}"
-      
+
       YAML.load(File.read(rubber_secret_file))
     end
 
@@ -52,7 +55,7 @@ namespace :rubber do
 
       puts "Saving #{rubber_secret_file}"
 
-      FileUtils.mkdir_p File.dirname(rubber_secret_file) 
+      FileUtils.mkdir_p File.dirname(rubber_secret_file)
       File.open(rubber_secret_file, 'w') { |f| f.puts YAML.dump(contents) }
     end
 
@@ -81,7 +84,7 @@ namespace :rubber do
         rubber_secret_dir = get_env('RUBBER_SECRET_DIR')
 
         File.expand_path(File.join(rubber_secret_dir, '/rubber-secret.yml'))
-      end      
+      end
     end
 
     def app_name
@@ -103,9 +106,9 @@ namespace :rubber do
         get_env('APP_NAME')
       end
     end
-    
+
     def note_name
-      unless defined?(@note_name)        
+      unless defined?(@note_name)
         @note_name = "#{app_name}-3rd-party-credentials-#{rubber_env}"
       end
 
@@ -115,7 +118,7 @@ namespace :rubber do
     def rubber_env
       get_env('RUBBER_ENV')
     end
-    
+
     def get_env(var, prompt=nil, required=true)
       prompt = prompt || var
 
@@ -137,4 +140,3 @@ namespace :rubber do
     end
   end
 end
-
